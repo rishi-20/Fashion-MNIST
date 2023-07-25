@@ -7,27 +7,37 @@ Original file is located at
     https://colab.research.google.com/drive/1CUlnJGSL6m7r2lw9FsSCKUpDL8GnQjQz
 """
 
+# Importing Libraries
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import tensorflow as tf
 
+
+# Load the data
 (X_train, y_train), (X_test, y_test)=tf.keras.datasets.fashion_mnist.load_data()
 
+# Printing the shape of data
 X_train.shape,y_train.shape, "***************" , X_test.shape,y_test.shape
 
+
+# After checking the 0 index image, we can see the result that the image is in the form of a three dimensional array.
 X_train[0]
 
+# Seeing the result of the 0 index image. The 0 index image belongs to the 9th class.
 y_train[0]
 
-class_labels = [	"T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt",	"Sneaker",	"Bag",	"Ankle boot"]
 
+# Creation of a list of our fashion categories
+class_labels = [	"T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt",	"Sneaker",	"Bag",	"Ankle boot"]
 class_labels
 
+
+# Plotting the 0 index image using the matplotlib library
 plt.imshow(X_train[0],cmap='Greys')
 
+# Display the random 25 images from the training data set using the matplotlib library
 plt.figure(figsize=(16,16))
-
 j=1
 for  i in np.random.randint(0,1000,25):
   plt.subplot(5,5,j);j+=1
@@ -35,6 +45,8 @@ for  i in np.random.randint(0,1000,25):
   plt.axis('off')
   plt.title('{} / {}'.format(class_labels[y_train[i]],y_train[i]))
 
+
+# Converting all the three-dimensional images to four-dimensional images using the expand_dims method of the numpy library
 X_train.ndim
 
 X_train = np.expand_dims(X_train,-1)
@@ -43,14 +55,21 @@ X_train.ndim
 
 X_test=np.expand_dims(X_test,-1)
 
+
+# Scaling the data set by dividing 255
 X_train = X_train/255
 X_test= X_test/255
 
+
+# Split the data set into the training and testing using the train_test_split() method
 from sklearn.model_selection import  train_test_split
 X_train,X_Validation,y_train,y_Validation=train_test_split(X_train,y_train,test_size=0.2,random_state=2020)
 
+# Checking the shape of the four data sets using the shape method
 X_train.shape,X_Validation.shape,y_train.shape,y_Validation.shape
 
+
+# Building the CNN Model
 model=keras.models.Sequential([
                          keras.layers.Conv2D(filters=32,kernel_size=3,strides=(1,1),padding='valid',activation='relu',input_shape=[28,28,1]),
                          keras.layers.MaxPooling2D(pool_size=(2,2)),
@@ -118,7 +137,7 @@ cnn_model2 = keras.models.Sequential([
                          keras.layers.Dense(units=10, activation='softmax')
                          ])
 
-# complie the model
+# compile the model
 cnn_model2.compile(optimizer='adam', loss= 'sparse_categorical_crossentropy', metrics=['accuracy'])
 
 #Train the Model
